@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,23 +93,33 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final int index = position;
 
+        LayoutInflater inflater= getLayoutInflater();
+        View layout = inflater.inflate(R.layout.dialog, null);
+        TextView msg = layout.findViewById(R.id.textView2);
+
         builder.setTitle("Delete");
-        builder.setMessage("Are you sure you want to delete " + adapter.getItem(position) + "?");
+        msg.setText(adapter.getItem(position));
+
+        ImageView img = layout.findViewById(R.id.imgbin);
+        //img.setImageResource(R.drawable.trash);
+
         builder.setCancelable(true);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int id){
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 toDoList.remove(index);
                 adapter.notifyItemRemoved(index);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int id){
-
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        builder.setView(layout);
+        builder.show();
+        //msg.setText(Html.fromHtml("Are you sure you want to delete<br/>" + "<b>" + adapter.getItem(position) + "<b>"));
 
 
 
